@@ -1,0 +1,49 @@
+---
+title: "RAssignTest1_Willoughby"
+author: "Jered Willoughby"
+date: "9/23/2018"
+output: word_document
+word_document: default
+html_document: normal
+---
+```{r}
+cost = c(247, 226, 169, 237, 187, 198, 225, 206, 257, 216, 229, 277,
+
+187, 239, 155, 240, 208, 258, 274, 227, 161, 209, 203, 204)
+
+library("moments")
+```
+
+
+A. The mean cost of the baseball games in 2012 is:
+```{r}
+mean(cost)
+```
+
+The median cost of the baseball games in 2012 is:
+```{r}
+median(cost)
+```
+
+The standard deviation of the cost of the baseball games in 2012 is:
+```{r}
+sd(cost)
+```
+
+The skewness of the cost of the baseball games in 2012 is:
+```{r}
+skewness(cost)
+```
+
+The kurtosis of the cost of the baseball games in 2012 is:
+```{r}
+kurtosis(cost)
+```
+
+Histogram and QQplot of the cost of the baseball games in 2012:
+```{r}
+hist(cost, main="Cost (in dollars) of attending 26 different baseball games in 2012")
+qqnorm(cost, main="QQ Plot of cost.csv")
+```
+
+I would say by the unimodal shape and absense of skewness in the histogram, that the cost of the baseball games is normally distributed. The QQ plot supports this evidence with the relative linear line that the distribution follows.

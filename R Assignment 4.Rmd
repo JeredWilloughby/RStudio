@@ -1,0 +1,41 @@
+---
+title: "R Assignment 4"
+author: "Jered Willoughby"
+output: html_document
+word_document: default
+---
+
+A small hotel has 10 rooms. From past experience they know that 20% of the time people who make reservations do not show up, so as a result they overbook by accepting 12 reservations for a given night. Let *X* be the number of no shows that night (people who dont show up). 
+
+1. What is the expected number of "no shows" that night? What is the standard deviation of that number? 
+
+We can see from the following computation that the expected number of "no shows" is 2.4, and the stadnard deviation of the expected "no shows" is 1.39.
+```{r}
+p=0.2
+n=12
+E=n*p
+E
+sqrt(12*0.2*0.8)
+```
+
+
+2. What is the probability that the hotel will end
+up with more customers than they can handle (that is, more people with reservations than available rooms will arrive)? 
+
+The probability that the hotel will end up with more customers than they can handle is 0.275. The way this was found is to represent the number of no shows as x<=1.
+```{r}
+pbinom(1, size=12, prob=0.2)
+```
+
+3. Use simulation to estimate the probabilities in 1 and 2. What explains why the simulation results are different from the answers to 1,2? Which answers are correct, the answers to 1,2 or the simulation results? Why?
+
+The following figures are simulated probabilities of 1. and 2. The reason why the asnwers are different is due to the sample size used to calculate the mean and standard deviation.
+```{r}
+Xi=rbinom(10000, 12, p=0.2)
+
+mean(Xi)
+sd(Xi)
+
+mean(Xi<=1)
+```
+I believe that simulating multiple samples is better than calculating just once. We've seen the example from the Law of Large Numbers and can deduce that the average probability is more accurately represented when there's a larger data set.

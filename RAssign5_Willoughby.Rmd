@@ -1,0 +1,82 @@
+---
+title: "R Assignment 5"
+author: "Jered Willoughby"
+date: "9/17/2018"
+output: word_document
+html_document: default
+word_document: default
+---
+
+
+1.The Adjusted Gross Income (AGI) of a taxpayer is given in the variable Income.AGI. Display the histogram of the “Income.AGI” data.
+
+```{r}
+mydata <- read.csv("http://tiny.cc/charitabletax")
+hist(mydata$Income.AGI, main='Adjusted Gross Income (AGI)',xlab='Income')
+```
+
+2.Simulate a dataset from a normal distribution having the same mean, standard deviation and sample size as for the “Income.AGI” data, and construct the histogram of these simulated data. Repeat four times, so that you now have five histograms of simulated data from a normal distribution, as well as the one histogram from the original data. Comparing your histogram from the original data to the five histograms of data that come from a normal distribution, does it appear likely that the original data could have come from a normal distribution?
+
+```{r}
+a1 <- rnorm(470, 43187.8, 22797.31)
+hist(a1,main='Adjusted Gross Income (AGI)',xlab='Income')
+```
+
+```{r}
+a2 <- rnorm(470, 43187.8, 22797.31)
+hist(a2,main='Adjusted Gross Income (AGI)',xlab='Income')
+```
+
+```{r}
+a3 <- rnorm(470, 43187.8, 22797.31)
+hist(a3,main='Adjusted Gross Income (AGI)',xlab='Income')
+```
+
+```{r}
+a4 <- rnorm(470, 43187.8, 22797.31)
+hist(a4,main='Adjusted Gross Income (AGI)',xlab='Income')
+```
+
+```{r}
+a5 <- rnorm(470, 43187.8, 22797.31)
+hist(a5,main='Adjusted Gross Income (AGI)',xlab='Income')
+```
+
+The five simulated data sets that have the same mean, standard deviation and sample size as the “Income.AGI” data are all normally distributed. Where as the original is clearly skewed to the right, which isn't normally distributed.
+
+3. Display the normal q-q plot of the “Income.AGI” data. Interpret q-q plots.
+
+```{r}
+qqnorm(mydata$Income.AGI)
+```
+
+We can see that the concentration of values are between -1.5 and 1.5, and that there's a tail or positive skew in the plots. The original data for Income.AGI is not normally distributed, which is also seen from the histogram example.
+
+4. Simulate a dataset from a normal distribution having the same mean, standard deviation and sample size as for the “Income.AGI” data, and construct the q-q plot of the simulated data. Repeat four times, so that you now have five q-q plots of simulated data from a normal distribution, as well as the one q-q plot from the original data. Comparing your q-q plot from the original data to the five q-q plots of data that come from a normal distribution, does it appear likely that the original data could have come from a normal distribution?
+
+```{r}
+q1 = rnorm(470, 43187.8, 22797.31)
+qqnorm(q1)
+```
+
+```{r}
+q2 = rnorm(470, 43187.8, 22797.31)
+qqnorm(q2)
+```
+
+```{r}
+q3 = rnorm(470, 43187.8, 22797.31)
+qqnorm(q3)
+```
+
+```{r}
+q4 = rnorm(470, 43187.8, 22797.31)
+qqnorm(q4)
+```
+
+```{r}
+q5 = rnorm(470, 43187.8, 22797.31)
+qqnorm(q5)
+```
+
+The simulated data set of Income.AGI and the associated five qq plots are relatively, falling on a positive line, and don't have tails/skewedness; this is indicative of symmetrically distributed histogram, which comes from a Normal Distribution.
