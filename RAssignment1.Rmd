@@ -1,0 +1,73 @@
+---
+title: "R Assignment 1"
+author: "Jered Willoughby"
+date: "8/29/2018"
+output: word_document
+html_document: default
+word_document: default
+---
+The production of wine is a multibillion-dollar worldwide industry. In an attempt to develop a model of wine quality as judged by wine experts, data was collected from red wine variants of Portuguese Vinho Verde wine. A sample of 50 wines is stored in VinhoVerde.csv.
+
+```{r echo=FALSE}
+mydata = read.csv("http://tiny.cc/vinhoverde")
+```
+# 1. Statistics for Variable “Fixed Acidity”
+
+# Mean
+```{r echo=FALSE}
+mean(mydata$Fixed.Acidity)
+```
+
+# Median
+```{r echo=FALSE}
+median(mydata$Fixed.Acidity)
+```
+
+# Mode
+```{r echo=FALSE}
+x=(mydata$Fixed.Acidity)
+y=table(x)
+names(y)[which(y==max(y))]
+```
+
+# Variance
+```{r echo=FALSE}
+var(mydata$Fixed.Acidity)
+```
+
+# Standard Deviation
+```{r echo=FALSE}
+sd(mydata$Fixed.Acidity)
+```
+
+# Interquartile Range
+```{r echo=FALSE}
+duration = mydata$Fixed.Acidity
+quantile(duration)
+
+a=9.050
+b=7.125
+
+a-b
+```
+# Q1
+7.125
+
+#Q3
+9.050
+
+# 2. Boxplot for Variable “Fixed Acidity”
+```{r echo=FALSE}
+boxplot(mydata$Fixed.Acidity, main="Fixed Acidity variants of Portuguese Vinho Verde", ylab="pH")
+```
+
+# 3. Histogram for Variable “Fixed Acidity”
+```{r echo=FALSE}
+hist(mydata$Fixed.Acidity, main="Fixed Acidity variants of Portuguese Vinho Verde", xlab="pH")
+```
+
+# 4. Answers for Variable "Fixed Acidity"
+
+The variables are centered around the pH value 7.8 while the data is clustered around the centered pH value of 7.8. The histogram's variables are skewed to the right, implying that it's not symmetric.
+
+
