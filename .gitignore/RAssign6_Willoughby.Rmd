@@ -1,0 +1,39 @@
+---
+title: "RAssign6_Willoughby"
+author: "Jered Willoughby"
+date: "9/26/2018"
+output: html_document
+word_document: default
+html_document: normal
+---
+
+1. For this problem, I followed the example in Dr. Zadeh's instructional video. We use n for the sample size and NSIM for the simulation amount. Y is the ordinal, random variable that we're ultimately needing to find the fequency, or realized value. p is the probability, of course suming to one. ntot is the amount of simulations that will be ran. rv=sample is the sample funtion, where rvm=matrix is the matrix function where the data is organized. Average=rowMeans is simply calculating the average. I didn't put the y Average table in because of the expansive size.
+
+| Satisfaction, y     | p(y) |
+|---------------------|------|
+| 1                   | 0.05 |
+| 2                   | 0.10 |
+| 3                   | 0.15 |
+| 4                   | 0.20 |
+| 5                   | 0.50 |
+| Total               | 1.0  |
+
+```{r}
+n=1000
+NSIM = 10000
+y=c(1, 2, 3, 4, 5)
+p=c(.05, .10, .15, .20, .50)
+ntot = n*NSIM
+rv=sample(y, ntot, p, replace=TRUE)
+rvm =matrix(rv, ncol=n, byrow=TRUE)
+Average =rowMeans(rvm)
+```
+
+
+```{r}
+hist(Average, freq=FALSE, main=paste("Customer Satisfaction Suvery n=1000"))
+qqnorm(Average)
+qqline(Average)
+```
+
+2. Y is normally distributed which is evident from qqplot's linear distribution following along the qqline. We can also tell from the histogram that 4 is the average ordinal value of the customer's satisfaction based on the survey. As the sample size increases, then the tendency for normality increase, which is a reiteration of the central limit theorem: "given a sufficiently large sample size from a population with a finite level of variance, the mean of all samples from the same population will be approximately equal to the mean of the population."

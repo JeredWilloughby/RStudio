@@ -1,0 +1,55 @@
+---
+title: "RAssignment2"
+author: "Jered Willoughby"
+date: "9/6/2018"
+output: html_document
+---
+
+Use the TTU graduate student exit survey data. 
+
+```{r}
+grad <- read.csv("http://tiny.cc/isqs6350_grad", header = T)
+attach(grad)
+
+head(COL)
+```
+
+Two variables of interest are FacTeaching, a 1,2,3,4,5 rating of teaching at TTU by the student, and COL, the college from which the student graduated. Perform a correspondence analysis of these two variables as follows. 
+
+1. Construct the contingency table showing counts of students in all combinations of these two variables.
+
+```{r}
+table(COL, FacTeaching)
+```
+2. Construct a contingency table showing the proportion of students in all combinations of these two variables (we call this marginal ).
+
+```{r}
+t = table(COL, FacTeaching)/length(COL)
+
+round(t,3)
+```
+
+3. What is the probability that a randomly selected student is from college of business administration (BA)?
+
+```{r}
+rowSums(t)
+```
+
+The probability that a randomly selected student is from college of business administration (BA) is 0.131368631.
+
+4. What is the probability that a randomly selected student is from BA and rates the teaching quality by 5?
+
+The probability that a randomly selected student is from BA and rates the teaching quality by 5 is 0.004.
+
+5. Given that a randomly selected student is from BA, what is the probability that he/she rates the teaching quality by 5?
+
+The that a randomly selected student is from BA and rates the teaching quality by 5 is 0.2519.
+
+6. Given that a randomly selected student is from college of education (ED), what is the probability that he/she rates the teaching quality by 5? What is your conclusion about the difference between the quality of teaching in BA and ED.
+
+Given that a randomly selected student is from college of education (ED), the probability that he/she rates the teaching quality by 5 is 0.3865. It's evident that the student rated quality of teaching in the education department far exceeds that of the business department.
+
+7. Given that a randomly selected student rates the teaching quality by 5, what is the probability that he/she is graduated from BA?
+
+Given that a randomly selected student rates the teaching quality by 5, the probability that he/she graduated from BA is 0.1157.
+

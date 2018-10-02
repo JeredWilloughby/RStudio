@@ -1,0 +1,63 @@
+---
+title: "R Assignment 3"
+author: "Jered Willoughby"
+output: html_document
+word_document: default
+html_document: normal
+---
+
+Suppose you role a die twice in succession, getting $X_1$ and $X_2$. Then divide them, getting $Y=\frac{X_1}{X_2}$. Thus, $Y$ is discrete, ranging from a minimum of 1/6 to a maximum of 6. 
+
+1. Find the mean of the Y.
+
+I answered this question in two ways, a & b. The first was the mean Y of a random sample of X1 and X2. Then, I calculated the weighted sum of the random variables shown in the figure before finding Y.
+
+a.
+
+```{r}
+p.die <- rep(1/6,6)
+sum(p.die)
+
+die1 <- 1:6
+sample(die1, size=1, prob=p.die, replace=T)
+
+die2 <- 1:6
+sample(die2, size=1, prob=p.die, replace=T)
+
+Y=die1/die2
+
+Y
+```
+
+b.
+
+```{r}
+Y=((2*(1/36)+3*(2/36)+4*(3/36)+5*(4/36)+6*(5/36)+7*(6/36)+8*(5/36)+9*(4/36)+10*(3/36)+11*(2/36)+12*(1/36)))/((2*(1/36)+3*(2/36)+4*(3/36)+5*(4/36)+6*(5/36)+7*(6/36)+8*(5/36)+9*(4/36)+10*(3/36)+11*(2/36)+12*(1/36)))
+
+Y
+```
+
+2. Simulate 10,000 (or more) iid observations $Y_i (=\frac{X_{i1}}{X_{i2}})$. Draw the graph of successive average (cumulative mean) of these $Y$s. Discuss your observations. 
+
+```{r}
+
+x1 = sample(1:6,10000, replace = T)
+
+x2 = sample(1:6,10000, replace = T)
+
+y=x1/x2
+
+y
+
+sumx = cumsum(y)
+
+cumMean = c()
+
+for (i in 1:10000)
+  
+  cumMean[i] = sumx[i]/i
+
+plot(cumMean, type = "l")
+```
+
+We can deduce from the cumMean plot that the iid random variables become identically distributed after multiple attempts. The law of large numbers states that after performing an experiment numerous times, the average of the results will near the expected value.

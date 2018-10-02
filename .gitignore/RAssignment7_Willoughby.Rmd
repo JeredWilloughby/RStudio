@@ -1,0 +1,55 @@
+---
+title: "R Assignment 7"
+author: "Jered Willoughby"
+output: html_document
+word_document: default
+---
+
+A quality characteristic of interest for a tea-bag-filling process is the weight of the tea in the individual bags. The label weight on the package indicates that the mean amount is 5.37 grams of tea in a bag. Problems arise if the bags are under-filled or if the mean amount of tea in a bag exceeds the label weight. The accompanying data are the weights, in grams, of a sample of 50 tea bags produced in one hour by a single machine (data file Teabags.csv).
+
+```{r}
+data <- read.csv("https://goo.gl/ZCVUpc")
+mean = mean(data$Teabags)
+mean
+sd = sd(data$Teabags)
+sd
+```
+
+1) Construct a 95\% confidence interval estimate for the population mean weight of the tea bags. Interpret the interval. 
+
+```{r}
+n = 50
+df= n-1
+alpha = 0.05
+error = qt(0.975, df)*sd/sqrt(n)
+mean - error
+mean + error
+```
+
+We're 95% confident that the mean of the individual tea bags will fall between 5.47 and 5.53.
+
+2) Is the company meeting the requirement set forth on the label that the mean amount of tea in a bag is 5.37 grams?
+
+No, it is evident from the initial average calculation (5.5014) and the confidence interval [5.471323 - 5.531477] that the labeled mean amount is under the actual weight of the tea bag.
+
+3) Explain how to understand the “95%” of the interval via simulation. Use simulation in your answer. 
+```{r}
+set.seed(123)
+n = 10
+NSIM=10000
+rv=rnorm(n*NSIM,5.5014,1)
+mu = 5.5014
+sd = 0.1058
+alpha = 0.05
+rvm=matrix(rv,ncol=n, byrow=TRUE)
+ybars = rowMeans(rvm)
+sdevs=apply(rvm,1,sd)
+lower=ybars - qt(1-alpha/2,n-1)*sdevs/sqrt(n)
+upper=ybars + qt(1-alpha/2,n-1)*sdevs/sqrt(n)
+
+head(cbind(ybars,sdevs,n,lower,upper,mu), 30)
+mean((lower<mu) & (mu<upper))
+```
+From the simulation we can see that proportions are in the range (0.9515), which is the 95% confidence interval. The majority of the upper and lower bound (95%) will fall in the range.
+
+Note: Realize, of course, that the distributions that produce the data cannot possibly be normal, but do the simulation using normal distribution anyway.
