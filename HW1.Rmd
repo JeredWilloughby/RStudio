@@ -1,0 +1,71 @@
+---
+title: "HW1"
+author: "Jered Willoughby"
+date: "3/22/2019"
+output: word_document
+---
+
+#1 How many columns are in a 2×n matrix? How many rows? Give an example in R.
+The answer to question 1 is the matrix has 2 rows and n number of columns. In order to display this in R, we will have to find a value for the n/column designator. I will choose n=3.
+
+```{r}
+A = matrix(c(3,2,1,1,2,3), ncol=3, byrow=T)
+A
+```
+
+#2 Matrix Product
+The answer is displayed by the R chunk below, please see. I went ahead and included dimensions before performing matrix multiplication.
+```{r}
+S = matrix(c(2,-1), ncol=2, byrow=T)
+S
+D = matrix(c(1,1,2,0), ncol=2, byrow=T)
+D
+dim(S)
+dim(D)
+S%*%D
+```
+
+#3 Matrix Product
+The question’s function is included in the chunk below, please see. I went ahead and included dimensions before performing matrix multiplication. This matrix multiplication problem is a non comformable system which will not compute properly. Therefore, I removed the function and replaced it with an explanation passed to the variable Y.
+```{r}
+Q = matrix(c(1,0,2,0), ncol=2, byrow=T)
+Q
+W = matrix(c(2,-1), ncol=2, byrow=T)
+W
+dim(Q)
+dim(W)
+Y = 'Q%*%W is non-conformable'
+Y
+```
+
+#4 Matrix Inverse
+The inverse is not defined if the determinant of matrix is equal to zero. I showed this in the following chunk and passed the explanation to the variable Y.
+```{r}
+Z = matrix(c(1,0,2,0), ncol=2, byrow=T)
+Z
+detZ = det(Z)
+detZ
+Y = 'Zinv = solve(Z) - system is exactly singular'
+Y
+```
+
+#5 Convert this covariance matrix into the corresponding correlation matrix (using R).
+First, I created the matrix based on the original. Then I used the R function that corresponds the the equation provided from the lecure. Please see the following chunk. There was no specification on rounding which I tried but didn’t have success.
+```{r}
+cov = matrix(c(3.87, 2.81, 3.14, 3.50, 2.81, 2.12, 2.26, 2.56, 3.14, 2.26, 2.65, 2.83, 3.50, 2.56, 2.83, 3.23), ncol=4, byrow=T)
+cov
+cov2cor(cov)
+```
+
+#6 Find the euclidean distance matrix for the rows of the data in R.
+To determine the distance in this problem, I had to determine the equation and plug in the proper R functions. The following chunk of code is what I came up with.
+```{r}
+love <- read.csv("http://tiny.cc/isqs6350_hus_wife")
+love
+m <- as.matrix(dist(love, upper=T))
+D <- apply(m, 2, mean)
+n <- length(D)
+D <- n/(n-1)*D
+D
+```
+

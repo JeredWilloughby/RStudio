@@ -1,0 +1,111 @@
+
+title: "HW4"
+author: "Jered Willoughby"
+date: "4/11/2019"
+output: pdf_document
+
+
+#1- Use Heptathlon data:
+
+#a.) Create a scaled distance matrix for observations.
+    The scaled distance matrix output will be displayed below.
+```{r}
+data("heptathlon",package="HSAUR2")
+mydata <- heptathlon[-25 ,-8] # remove the PNG as an outlier and the last variable (the final scores)
+X = data.matrix(mydata, rownames.force = NA)
+options(digits=3)
+d = dist(X)
+cmd = cmdscale(d, k=3)
+cmd
+```
+
+#b.) Perform a graphical MDS analysis on the resulting “distance” matrix of part a. Label the points using the row names (with cex = 0.5). Who is the most similar athlete to Scheider (SWI)?
+Based on the results from our graphical MDS analysis, the most similar athlete to Scheider is Ruotsalainen from FIN. The reasoning is the 2D plot points and the relative distance after scaling.
+
+```{r}
+#Graphical Multidimensional Analysis on the distance matrix
+plot(cmd, xlab = "coordinate 1", ylab = "coordinate 2", pch=".")
+text(cmd, labels=rownames(cmd), cex=0.5)
+```
+
+#c.) Use the correlation matrix of the data. Convert the correlation matrix to a distance matrix by computing (1-correlation). Explain why the resulting matrix represent “distances” between variables.
+By subtracting the correlation matrix from one, the resultant matrix will have diagnol values as zero, which is indicative of a distance matrix. In fact, and zero or symmetrically possitive values represent a distance matrix.
+```{r}
+#Convert correlation matrix of the data to the distance matrix.
+round(1-cor(mydata), 2)
+```
+
+#d.) Perform a graphical MDS analysis on the resulting “distance” matrix of part c. Label the points using the column names (with cex = 0.5). What variables are more similar (related) to each other? 
+According to the graphical MDS analysis on the resultant distance matrix, we can conclude that the variables longjump and shot are the most related/similar, where run800m and run200m are also similar in distance.
+```{r}
+X2 = cmdscale(1-cor(mydata), eig=T)
+plot(X2$points[,1:2], pch=" ")
+text(X2$points[,1:2], labels = colnames(mydata), cex = 0.5)
+```
+
+#2- Use the TTU graduate student exit survey data.
+
+```{r}
+grad <- read.csv("http://tiny.cc/isqs6350_grad",  header = T)
+```
+
+#a.) Construct the contingency table showing counts of students in all combinations of these two variables (FacTeaching & COL)
+
+```{r}
+tbl = table(grad$COL, grad$FacTeaching)
+tbl
+```
+
+#b.) Construct the correspondence analysis (CA) plot and comment on the outlier, in light of your table in A. Then remove the outlier data you discovered and re-construct the CA plot.
+Chi square will test for independence, which isn't the case in this data set. From the initial correspondence analysis of our grad data set (FacTeaching and COL), we can deduce that DUAL is an outlier.
+```{r}
+#Test for independence
+chisq.test(tbl)
+#Determine what categories are related to one another
+library(ca)
+grad.ca = ca(tbl)
+#Plot and determine outliers
+plot(grad.ca)
+```
+
+Now I will remove the outlier and reconstruct the CA plot.
+```{r}
+#This step removes row 5
+tbl2 = tbl[-5,]
+#Now we assign the correspondance analysis to our cleaned frame and plot the results
+grad.ca2 = ca(tbl2)
+plot(grad.ca2)
+```
+
+Based on the CA results, 78% of the distances are shown.
+
+#c.) Pick three colleges in your graph, two of which are close to each other, and the third of which is far from your first two. Find the three conditional distributions of rating for your three colleges, and interpret the distance between the points in the graph in terms of “distances” between those three conditional distributions.
+Let's look at the History and Education department first in relation to a 5 rating. By determining the theta from the axis origin, we can see that it's less than 90 degrees. This can be interpreted and applied to the following: P(rating5/HS)>P(rating5) & P(rating5/ED)>P(rating5) which implies that the quality is higher for the history and education departments and has more 5 ratings than other departments. Looking at AR, or the art department, we can see that P(rating2/AR)>P(rating2); this implies the probable condition of a 2 rating and the art department.
+```{r}
+#Make a probability table based on the conditional distrubutions
+# Let look at the education department first.
+ptbl = prop.table(tbl2, 1)
+round(ptbl, 4)
+ptbl[5,5]
+sum(prop.table(tbl2)[,5])
+```
+
+Based on the computed results, P(rating5/ED) = 0.386 and P(rating5) = 0.289. This confirms our approximate geometric interpretation of P(rating5/ED)>P(rating5). Let's now compute our conditional probability of a 5 rating and the history department.
+```{r}
+# Now we're focusing on the history department and a 5 rating
+ptbl = prop.table(tbl2, 1)
+round(ptbl, 4)
+ptbl[8,5]
+sum(prop.table(tbl2)[,5])
+```
+
+Based on the computed results, P(rating5/HS) = 0.34 and P(rating5) = 0.289. This confirms our approximate geometric interpretation of P(rating5/ED)>P(rating5). Let's now compute our conditional probability of a 2 rating and the art department.
+```{r}
+# Now we're focusing on the art department and a 2 rating
+ptbl = prop.table(tbl2, 1)
+round(ptbl, 4)
+ptbl[2,2]
+sum(prop.table(tbl2)[,2])
+```
+
+Based on the computed results, P(rating2/AR) = 0.121 and P(rating2) = 0.0645. This confirms our approximate geometric interpretation of P(rating2/AR)>P(rating2).

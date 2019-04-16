@@ -1,0 +1,109 @@
+---
+title: "HW3"
+author: "Jered Willoughby"
+date: "4/6/2019"
+output: word_document
+---
+#1 Police applicant data
+```{r}
+police <- read.csv("http://tiny.cc/isqs6350_police_app")
+head(police)
+```
+
+
+#a) Perfrom the principal components using the correlation matrix.
+```{r} 
+#Principle component analysis
+police.pca = princomp(police, cor=T) # will find eigenvectors of the correlation matrix
+summary(police.pca, loading=T) # loading = eigenvectors 
+score = police.pca$score
+
+```
+#b) What percentage of total variance is covered by the first two principal components?
+To determine the total variance performed by certain principle comonents, we would look at the output of the princomp function, specifically in the proportion of variance. In the police dataset, the first two components cover 35% and 16% respectfully; both total to 51.2%, which is found in the cumulative proportion row.
+
+#c) Report the loading coefficients (eigenvector of the correlation matrix) of the first two principle components.
+The loading coefficients of the police dataset's first two components are as follows: 
+Comp.1 = NaN, -0.309, -0.416, -0.299, -0.293, -0.361, -0.284, 0.118, NaN, 0.292, 0.253, NaN, NaN, 0.205, -0.368. 
+Comp.2 = 0.161, -0.195, NaN, -0.208, -0.201, NaN, 0.303, 0.383, 0.264, -0.235, NaN, 0.454, -0.482, NaN, 0.218
+
+#d) Meaning of the first two components
+It's obvious that the first two components have the most variance and magnitude. These are associated with the eigenvector and eigenvalues. Since data usually takes on the form of an ellipse, we see magnitude of the first component "stretching" the length by 2.28 (comp.2 mag. is 1.56). The scores, or performance of the subjects vary which can be view by the output provided.Component 1 has more negative association than component 2; this would imply that a candidate with a high comp.2 score would rate/measure more strongly in pulse, thigh, and recvr measurements, whereas a high comp.1 score would mean poorer performance/measurements in most areas.
+
+#2 US state crime data
+```{r}
+crime <- read.csv("http://tiny.cc/isqs6350_crime", row.names = "STATE")
+head(crime)
+```
+#a) Perform the principal components using correlation matrix.
+```{r}
+crime.pca = princomp(crime, cor=T)
+summary(crime.pca, loading=T)
+```
+#b) What percentage of total variance is covered by the first two principal components?
+In the crime dataset, the first two components cover 58.7% and 17.6%, which is cumulative value of 76.4%.
+
+#c) Construct the biplot graph of the crime data. Interpret the resulting biplot graph for “MISSISSIPI”, “NEVADA”, and “HAWAI.
+
+Nevada has the highest scores for variables, which is to be expected given the nature of business that's primary to that area. Hawaii has more of an average positive score for robbery burglary larceny and auto, but negative for rape assault and murder; I would also say hawaii a higher positive score in auto than Nevada. Mississipi has an average positive score in murder, assault rape, and a low negative score in robbery, burglary, larceny, and auto.
+```{r}
+pc <- princomp(crime, cor = T)
+biplot(pc, cex=0.6)
+```
+#3 CCA on Husband/Wife data set. Q1. What is the level of passionate love you feel for your partner? Q2. What is the level of passionate love your partner feels for you? Q3. What is the level of companionate love you feel for your partner? Q4. What is the level of companionate love your partner feels for you?
+```{r}
+library(CCA)
+love = read.csv("http://tiny.cc/isqs6350_hus_wife",  header = T)
+love = scale(love)
+options(digits = 3)# Creating two sets for correlations
+X = love[, 1:4]  # Husband's responses
+Y = love[, 5:8]  # Wife's responses
+cca = cc(X,Y)
+```
+
+#a) Find the linear combination of responses.
+```{r}
+# find xcoef
+a = cca$xcoef
+round(a,3)
+# first column of xscores
+U = cca$scores$xscores
+head(U)
+# find ycoef
+b = cca$ycoef
+round(b,3)
+# first column of yscores
+V = cca$scores$yscores
+head(V)
+```
+#a) U1 = 0.194X1 - 0.661X2 - 1.834X3 + 1.807X4
+#   V1 = -0.593Y1 - 0.463Y2 - 0.855Y3 + 0.416Y4
+```{r}
+# find ycoef
+b = cca$ycoef
+round(b,3)
+# first column of yscores
+V = cca$scores$yscores
+head(V)
+```
+#b) Find the correlation between pairs
+  Please see the output below, which results in a 0.57.
+```{r}
+# correlation between pairs
+cca = cc(X,Y)
+cca$cor[1]
+```
+#c) What does the husband linear combination (U1) measure? 
+ Based on the output from the code below, we can see that question 2 and 3 are the most positively correlated for the husband set. This makes sense because the more compasionate love felt for a partner will correlation with passionate love your partner feels for you.
+```{r}
+a[,1]
+a1 = a[,1]/min(a[,1])
+round(a1,3)
+```
+#d) Repeat C. for the wives linear combination (V1). 
+  Based on the output from the code below, we can see that question 3 and 1 are the most positively correlated for the wife set, while question 2 is still positive. This could be intereted by a woman's compasionate love directly correlated for a woman's passionate love. The positive response on q.2 that addresses the passionate love the wife's partner feels toward her would increase her love.
+```{r}
+b[,1]
+b1 = b[,1]/min(b[,1])
+round(b1,3)
+```

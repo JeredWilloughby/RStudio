@@ -1,0 +1,108 @@
+---
+title: "HW2"
+author: "Jered Willoughby"
+date: "3/28/2019"
+output: word_document
+---
+#1 Chi Squared - Examination of the multivariate normality of pottery data.
+```{r}
+#Load library and set the data frame
+data(pottery, package ="HSAUR2")
+x = pottery[,-10] # excluding "kiln"
+# Following the example of Mahalanobis Distance - plot chi sq. 
+xbar = colMeans(x)
+S = cov(x)
+d2 = mahalanobis(x,xbar,S)
+quantiles = qchisq((1:nrow(x)-1/2)/nrow(x), df = ncol(x))
+sd2 = sort(d2)
+plot(quantiles, sd2, xlab=expression(paste(chi[3]^2,"Quantile")), ylab="Ordered Square distances")
+abline(a = 0, b = 1)
+
+```
+
+After performing a multivariate analysis on the pottery dataset, we see that there are outliers past 20 with increasing mahalonobis distance.
+
+#2 Bivariate boxplot and correlation before and after outlier removal.
+
+```{r}
+library(MVA)
+data("USairpollution",package="HSAUR2")
+df=USairpollution
+# examine the scatterplots with labels
+plot(USairpollution$temp, USairpollution$wind,
+     xlab="Average annual temperature F",
+     ylab="Average annual wind speed (mph)",
+     pch = 20)
+text(USairpollution$temp, USairpollution$wind, cex=0.8,
+     labels=abbreviate(row.names(USairpollution)))
+
+plot(USairpollution$temp, USairpollution$precip,
+     xlab="Average annual temperature F",
+     ylab="Average annual Precipitation",
+     pch = 20)
+text(USairpollution$temp, USairpollution$precip, cex=0.8,
+     labels=abbreviate(row.names(USairpollution)))
+
+# set dataframes and create bivariate boxplots
+df1 = USairpollution[, c("temp","wind")]
+df2 = USairpollution[, c("temp","precip")]
+
+bvbox(df1, xlab="Average Annual Temperature F", ylab="Average Annual Wind Speed (mph)")
+text(USairpollution$temp, USairpollution$wind, cex=0.8,
+     labels=abbreviate(row.names(USairpollution)))
+
+bvbox(df2, xlab="Average Annual Temperature F", ylab="Average Annual Precipitation")
+text(USairpollution$temp, USairpollution$precip, cex=0.8,
+     labels=abbreviate(row.names(USairpollution)))
+
+#Set outlier data/labels
+lab1 = c("Miami","Phoenix")
+lab2 = c("Miami","Phoenix","Albuquerque","Denver")
+outcity1 = match(lab1, rownames(USairpollution))
+outcity2 = match(lab2, rownames(USairpollution))
+
+#Run correlation before removal of outliers.
+cor(df$temp, df$wind)
+cor(df$temp, df$precip)
+
+#Run correlation after removal of outliers.
+cor(df$temp[-outcity1], df$wind[-outcity1])
+cor(df$temp[-outcity2], df$precip[-outcity2])
+```
+We can see from the correlation of temp and wind that they have a weak, negative causal relationship. Temp and precip have a weak, possitive causal relationship. After the outlier were identified and removed, correlation between temp and wind become less while temp and precip increased to a stronger causal relationship.
+#3a Banknote dataset - Construct univariate kernel estimates (Gaussian kernel) of the distributions of these two variables (two graphs).
+```{r}
+#Examine banknote dataset by reading the url.csv file
+banknote = read.csv("http://westfall.ba.ttu.edu/isqs6348/Rdata/swiss.csv")
+
+mydata1 = banknote[,c(1,5,7)]
+
+#plot density using gaussian kernel
+plot(density(mydata1$bottom_margin, bw = 0.3, kernel = "gaussian"))
+plot(density(mydata1$diag_length, bw = 0.35, kernel = "gaussian"))
+```
+#3b Banknote dataset - Using the bivariate Gaussian kernel, estimate the bivariate density of the two variables
+```{r}
+#Using the KernSmooth library, make a contour and 3D plot
+library("KernSmooth")
+mydata2 = banknote[,c(2,4)]
+
+density = bkde2D(mydata2, bandwidth = 0.1)
+plot(mydata2, xlab = "Banknote Length", ylab = "Banknote Right Width", main = "Contour of Banknote Variables")
+contour(x=density$x1, y=density$x2, z=density$fhat, add=TRUE)
+persp(x=density$x1, y=density$x2, z=density$fhat,
+      xlab = "Banknote Length", ylab = "Banknote Right Width", zlab= "density", main = "3D density", phi=30)
+```
+#3c Banknote dataset - Plot the scatterplot, highlighting points with different colors according to whether the bills are genuine or counterfeit
+```{r}
+#Using the same banknote dataset, use a color indicator to differentiate between counterfit bills.
+mydata2 = banknote
+
+plot(mydata2[,c(2,4)], col = mydata2[,1])
+label = levels(mydata2[,1])
+legend("topright", label, pch=1, col = 1:2, cex=0.8)
+
+library(ResourceSelection)
+kdepairs(mydata2[,c(2,4)])
+```
+
